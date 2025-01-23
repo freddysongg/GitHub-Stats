@@ -1,0 +1,11 @@
+node_modules/
+dist/
+build/
+public/
+*.min.js
+package-lock.json
+pnpm-lock.yaml
+.git/
+.vscode/
+.DS_Store
+coverage/

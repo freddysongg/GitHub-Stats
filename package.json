@@ -1,0 +1,36 @@
+{
+  "name": "github-stats-dashboard",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json && tsc -p tsconfig.node.json",
+    "format": "prettier --write '**/*.{js,json,md,ts,svelte}'",
+    "format:check": "prettier --check '**/*.{js,json,md,ts,svelte}'"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.1.2",
+    "@tsconfig/svelte": "^5.0.4",
+    "@types/d3": "^7.4.3",
+    "autoprefixer": "^10.4.18",
+    "postcss": "^8.4.35",
+    "prettier": "^3.2.5",
+    "prettier-plugin-svelte": "^3.2.0",
+    "svelte": "^4.2.19",
+    "svelte-check": "^3.8.6",
+    "tailwindcss": "^3.4.1",
+    "tslib": "^2.7.0",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.2"
+  },
+  "dependencies": {
+    "@octokit/rest": "^20.0.2",
+    "chart.js": "^4.4.2",
+    "d3": "^7.9.0",
+    "date-fns": "^3.3.1",
+    "socket.io-client": "^4.7.4"
+  }
+}

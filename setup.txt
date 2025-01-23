@@ -1,2 +1,0 @@
-docker-compose -f backend/docker-compose.yml up --build
-wscat -c ws://localhost:8080/ws

@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --contribution-color-0: #ebedf0;
+  --contribution-color-1: #9be9a8;
+  --contribution-color-2: #40c463;
+  --contribution-color-3: #30a14e;
+  --contribution-color-4: #216e39;
+}
+
+.dark {
+  --contribution-color-0: #161b22;
+  --contribution-color-1: #0e4429;
+  --contribution-color-2: #006d32;
+  --contribution-color-3: #26a641;
+  --contribution-color-4: #39d353;
+}
+
+body {
+  @apply bg-white dark:bg-github-900 text-github-900 dark:text-white transition-colors duration-200;
+}
+
+.card {
+  @apply bg-white dark:bg-github-800 rounded-mac shadow-mac p-6 transition-all duration-200;
+}
