@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -12,15 +11,10 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/sirupsen/logrus"
-	"golang.org/x/oauth2"
 
-	"github.com/freddysongg/GitHub-Stats/internal/auth"
-	"github.com/freddysongg/GitHub-Stats/internal/cache"
-	"github.com/freddysongg/GitHub-Stats/internal/github"
-	"github.com/freddysongg/GitHub-Stats/internal/graphql"
-	"github.com/freddysongg/GitHub-Stats/internal/health"
-	"github.com/freddysongg/GitHub-Stats/internal/kafka"
-	"github.com/freddysongg/GitHub-Stats/internal/websocket"
+	"github-dashboard-backend/internal/cache"
+	"github-dashboard-backend/internal/github"
+	"github-dashboard-backend/internal/graphql"
 )
 
 func main() {
@@ -33,28 +27,13 @@ func main() {
 	config := loadConfig()
 
 	// Initialize services
-	oauthConfig := &oauth2.Config{
-		ClientID:     config.GitHubClientID,
-		ClientSecret: config.GitHubClientSecret,
-		Scopes:       []string{"read:user", "repo"},
-		Endpoint: oauth2.Endpoint{
-			AuthURL:  "https://github.com/login/oauth/authorize",
-			TokenURL: "https://github.com/login/oauth/access_token",
-		},
-	}
-
 	cache := cache.NewCache()
-	githubService := github.NewService(config.GitHubToken, cache, logger)
-	wsHub := websocket.NewHub()
-	kafkaProducer := kafka.NewProducer(config.KafkaBrokers, logger)
-	authService := auth.NewService(oauthConfig, logger)
+	githubService := github.NewService(config.GitHubToken, cache)
 
 	// Initialize GraphQL server
 	srv := handler.NewDefaultServer(graphql.NewExecutableSchema(graphql.Config{
 		Resolvers: &graphql.Resolver{
-			GitHubService: githubService,
-			Cache:         cache,
-			Logger:        logger,
+			GitHub: githubService,
 		},
 	}))
 
@@ -62,17 +41,11 @@ func main() {
 	router := http.NewServeMux()
 	router.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", srv)
-	router.Handle("/health", health.NewHandler())
-	router.Handle("/ws", websocket.NewHandler(wsHub))
 
 	server := &http.Server{
 		Addr:    ":" + config.Port,
 		Handler: router,
 	}
-
-	// Start services
-	go wsHub.Run()
-	go kafkaProducer.Run()
 
 	// Graceful shutdown
 	done := make(chan os.Signal, 1)
