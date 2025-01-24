@@ -5,6 +5,12 @@
 
   export let data: ContributionDay[] = [];
 
+  onMount(() => {
+    if (data.length) {
+      createGraph();
+    }
+  });
+
   let svg: SVGElement;
   const margin = { top: 20, right: 20, bottom: 20, left: 20 };
   const cellSize = 10;
